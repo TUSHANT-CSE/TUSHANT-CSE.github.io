@@ -1,0 +1,20 @@
+{
+  "name": "tushant-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tushant's animated portfolio — vanilla JavaScript, a 3D orbital canvas and a live GitHub project gallery.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/site.mjs serve",
+    "start": "node scripts/site.mjs serve",
+    "build": "node scripts/site.mjs build",
+    "test": "node --test test/*.test.mjs",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  }
+}

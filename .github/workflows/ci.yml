@@ -1,0 +1,54 @@
+name: Portfolio CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Tests and static build
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Microsoft Edge for browser tests
+        run: npx playwright install msedge
+
+      - name: Run logic and server tests
+        run: npm test
+
+      - name: Run browser tests
+        run: npm run test:browser
+        env:
+          CI: 'true'
+
+      - name: Build the static site
+        run: npm run build
+
+      - name: Save browser test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-evidence
+          path: |
+            test-results/
+            assets/preview-*.png
+          if-no-files-found: ignore
+          retention-days: 7
